@@ -157,6 +157,24 @@ def run_query(request: QueryRequest):
 
     mode = classify_question(question, schema_context, has_documents=has_docs, conversation_context=conversation_context)
 
+    # --- UNRELATED: don't force a SQL query for text that isn't a real data question ---
+    if mode == "unrelated":
+        available_tables = list_tables()
+        friendly_msg = (
+            "This doesn't look like a question about the data I have access to.\n\n"
+            f"I can answer questions about these tables: {', '.join(available_tables)}"
+        )
+        if has_docs:
+            friendly_msg += ", or about the content of your uploaded documents."
+        else:
+            friendly_msg += ". You can also upload a PDF to ask questions about its content."
+        return QueryResponse(
+            question=question,
+            mode="unrelated",
+            answer=friendly_msg,
+            attempts=1,
+        )
+
     # --- DOCUMENT PATH: answer using text extracted from uploaded PDFs ---
     if mode == "document":
         conn = get_connection()

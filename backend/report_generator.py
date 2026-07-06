@@ -64,7 +64,12 @@ def generate_report(
     story = []
 
     # --- Title ---
-    title = "Text-to-SQL Query Report" if mode == "sql" else "Document Q&A Report"
+    if mode == "sql":
+        title = "Text-to-SQL Query Report"
+    elif mode == "document":
+        title = "Document Q&A Report"
+    else:
+        title = "Query Report"
     story.append(Paragraph(title, styles["Title"]))
     story.append(Spacer(1, 6))
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -76,7 +81,7 @@ def generate_report(
     story.append(Paragraph(escape(question), styles["Normal"]))
     story.append(Spacer(1, 12))
 
-    if mode == "document":
+    if mode in ("document", "unrelated"):
         # --- Answer ---
         story.append(Paragraph("Answer", styles["Heading2"]))
         story.append(Paragraph(escape(answer).replace("\n", "<br/>"), styles["Normal"]))

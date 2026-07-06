@@ -25,7 +25,8 @@ RULES_TEXT = """Rules:
 - Only generate SELECT (or WITH...SELECT) queries. Never generate INSERT, UPDATE, DELETE, DROP, ALTER, or any write operation.
 - Only use tables and columns that exist in the schema above.
 - Return ONLY the raw SQL query, with no explanation, no markdown formatting, no comments.
-- If the question is ambiguous, make a reasonable assumption and generate the best-guess query.
+- If the question is genuinely a data question but slightly ambiguous in wording (e.g. unclear which column to sort by), make the most reasonable assumption and generate the best-guess query.
+- Do NOT invent a SQL query for text that is not actually a data question about this schema (e.g. an unrelated paragraph, opinion, or message that has nothing to do with these tables). This case should not normally reach you since it is filtered upstream, but if it does, still only use columns/tables that genuinely relate to the request.
 - If the question refers to something from the conversation history (e.g. "iska", "us mein se", "and also show..."), resolve it using that context.
 - The user's question may be in English, Urdu, or Roman Urdu (Urdu written in English letters). Understand the intent regardless of language."""
 
